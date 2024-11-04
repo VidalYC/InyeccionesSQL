@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Usuario</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+</head>
+<body>
+    <main class="main">
+        <div class="container">
+            <section class="wrapper">
+                <div class="heading">
+                    <h1 class="text text-large">Registro de Usuario</h1>
+                </div>
+                <form name="registro" class="form" method="POST">
+                    <div class="input-control">
+                        <input type="text" name="nombre" class="input-field" placeholder="Nombre" required>
+                    </div>
+                    <div class="input-control">
+                        <input type="text" name="apellido" class="input-field" placeholder="Apellido" required>
+                    </div>
+                    <div class="input-control">
+                        <label for="cedula" class="input-label" hidden>Cédula</label>
+                        <input type="text" name="cedula" id="cedula" class="input-field" placeholder="Cédula" 
+                               pattern="\d{8,10}" maxlength="10" minlength="8" required>
+                    </div>
+                    
+                    <div class="input-control">
+                        <input type="email" name="correo" class="input-field" placeholder="Correo" required>
+                    </div>
+                    <div class="input-control">
+                        <input type="text" name="numero_celular" class="input-field" placeholder="Número Celular" required>
+                    </div>
+                    <div class="input-control">
+                        <input type="text" name="direccion" class="input-field" placeholder="Dirección" required>
+                    </div>
+                    <div class="input-control">
+                        <input type="password" name="contrasena" class="input-field" placeholder="Contraseña" required>
+                    </div>
+                    <div class="input-control">
+                        <input type="submit" class="input-submit" value="Registrar">
+                    </div>
+                </form>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

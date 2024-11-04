@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <style>
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            display: none; /* Oculto por defecto */
+        }
+    </style>
+</head>
+<body>
+    {% if mensaje_error %}
+    <div class="alert" id="alerta">
+        {{ mensaje_error }}
+    </div>
+    <script>
+        // Mostrar la alerta
+        document.getElementById('alerta').style.display = 'block';
+        // Ocultar la alerta después de 5 segundos
+        setTimeout(function() {
+            document.getElementById('alerta').style.display = 'none';
+        }, 5000);
+    </script>
+    {% endif %}
+
+    <main class="main">
+        <div class="container">
+            <section class="wrapper">
+                <div class="heading">
+                    <h1 class="text text-large">Iniciar Sesión</h1>
+                </div>
+                <form method="post" class="form">
+                    <div class="input-control">
+                        <label for="nombre" class="input-label" hidden>Nombre de usuario</label>
+                        <input type="text" name="nombre" id="nombre" class="input-field" placeholder="Nombre de usuario">
+                    </div>
+                    <div class="input-control">
+                        <label for="contrasena" class="input-label" hidden>Contraseña</label>
+                        <input type="password" name="contrasena" id="contrasena" class="input-field" placeholder="Contraseña">
+                    </div>
+                    <div class="input-control">
+                        <input type="submit" name="submit" class="input-submit" value="Iniciar sesión">
+                    </div>
+                </form>
+                <div class="register-link">
+                    <p class="text">¿No tienes una cuenta? <a href="{{ url_for('registro') }}" class="text text-links">Regístrate aquí</a></p>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,68 @@
+/* static/dash.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+}
+
+h1 {
+    margin: 0;
+}
+
+.welcome-message {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+.dashboard-content {
+    background-color: white;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.logout-btn {
+    display: block; /* Cambiado de inline-block a block */
+    background-color: #d9534f;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    float: right;
+    margin-top: 20px; /* Añadido para dar espacio arriba del botón */
+}
+
+.logout-btn:hover {
+    background-color: #c9302c;
+}
+
+/* Estilos específicos para el dashboard de administrador */
+.admin-panel {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+/* Estilos específicos para el dashboard de usuario */
+.user-info {
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    padding: 15px;
+    margin-top: 20px;
+}

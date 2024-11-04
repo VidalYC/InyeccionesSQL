@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Usuario</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dash.css') }}">
+    <style>
+        .user-info {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .user-info p {
+            margin: 10px 0;
+        }
+        .user-info strong {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Dashboard de Usuario</h1>
+        </div>
+    </header>
+    <div class="container">
+        <div class="welcome-message">Bienvenido, {{ nombre }} {{ apellido }}</div>
+        <div class="dashboard-content">
+            <h2>Tu Información</h2>
+            <div class="user-info">
+                <p><strong>Nombre:</strong> {{ nombre }}</p>
+                <p><strong>Apellido:</strong> {{ apellido }}</p>
+                <p><strong>Cédula:</strong> {{ cedula }}</p>
+                <p><strong>Correo:</strong> {{ correo }}</p>
+                <p><strong>Número Celular:</strong> {{ numero_celular }}</p>
+                <p><strong>Dirección:</strong> {{ direccion }}</p>
+            </div>
+        </div>
+        <a href="{{ url_for('logout') }}" class="logout-btn">Cerrar Sesión</a>
+    </div>
+</body>
+</html>
