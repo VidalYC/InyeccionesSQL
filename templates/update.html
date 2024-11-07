@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Usuario</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin: 30px 0;
+            font-size: 2.2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2a5298;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 5px rgba(42,82,152,0.3);
+        }
+        .btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .btn-cancel {
+            background: linear-gradient(135deg, #f44336 0%, #e53935 100%);
+            margin-left: 15px;
+            text-decoration: none;
+        }
+        .error {
+            color: #f44336;
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <h1>Actualizar Usuario</h1>
+    <div class="form-container">
+        <form method="POST" action="{{ url_for('editar_usuario', id=usuario[0]) }}" onsubmit="return validarFormulario()">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" value="{{ usuario[1] }}" required pattern="[A-Za-záéíóúÁÉÍÓÚñÑ\s]+" minlength="2" maxlength="50">
+                <div id="errorNombre" class="error">El nombre solo debe contener letras y espacios</div>
+            </div>
+            <div class="form-group">
+                <label for="apellido">Apellido:</label>
+                <input type="text" id="apellido" name="apellido" value="{{ usuario[2] }}" required pattern="[A-Za-záéíóúÁÉÍÓÚñÑ\s]+" minlength="2" maxlength="50">
+                <div id="errorApellido" class="error">El apellido solo debe contener letras y espacios</div>
+            </div>
+            <div class="form-group">
+                <label for="cedula">Cédula:</label>
+                <input type="text" id="cedula" name="cedula" value="{{ usuario[3] }}" required pattern="[0-9]{8,10}">
+                <div id="errorCedula" class="error">La cédula debe contener entre 8 y 10 dígitos numéricos</div>
+            </div>
+            <div class="form-group">
+                <label for="correo">Correo:</label>
+                <input type="email" id="correo" name="correo" value="{{ usuario[4] }}" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                <div id="errorCorreo" class="error">Ingrese un correo electrónico válido</div>
+            </div>
+            <div class="form-group">
+                <label for="numero_celular">Número Celular:</label>
+                <input type="tel" id="numero_celular" name="numero_celular" value="{{ usuario[5] }}" required pattern="[0-9]{10}">
+                <div id="errorCelular" class="error">El número celular debe contener 10 dígitos numéricos</div>
+            </div>
+            <div class="form-group">
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" name="direccion" value="{{ usuario[6] }}" required minlength="5" maxlength="100">
+                <div id="errorDireccion" class="error">La dirección debe tener entre 5 y 100 caracteres</div>
+            </div>
+            <div class="form-group">
+                <label for="rol">Rol:</label>
+                <select id="rol" name="rol" required>
+                    <option value="admin" {% if usuario[8] == 'admin' %}selected{% endif %}>Administrador</option>
+                    <option value="usuario" {% if usuario[8] == 'usuario' %}selected{% endif %}>Usuario</option>
+                </select>
+            </div>
+            <button type="submit" class="btn">Guardar Cambios</button>
+            <a href="{{ url_for('dashboard_admin') }}" class="btn btn-cancel">Cancelar</a>
+        </form>
+    </div>
+
+    <script>
+        function validarFormulario() {
+            let esValido = true;
+            const campos = ['nombre', 'apellido', 'cedula', 'correo', 'numero_celular', 'direccion'];
+            
+            campos.forEach(campo => {
+                const input = document.getElementById(campo);
+                const error = document.getElementById('error' + campo.charAt(0).toUpperCase() + campo.slice(1));
+                
+                if (!input.checkValidity()) {
+                    error.style.display = 'block';
+                    esValido = false;
+                } else {
+                    error.style.display = 'none';
+                }
+            });
+
+            return esValido;
+        }
+
+        // Validación en tiempo real
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', function() {
+                const error = document.getElementById('error' + this.id.charAt(0).toUpperCase() + this.id.slice(1));
+                if (this.checkValidity()) {
+                    error.style.display = 'none';
+                } else {
+                    error.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

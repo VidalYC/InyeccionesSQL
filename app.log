@@ -1,0 +1,18 @@
+2024-11-06 12:41:13,883 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-06 12:41:13,883 - INFO - [33mPress CTRL+C to quit[0m
+2024-11-06 12:41:13,885 - INFO -  * Restarting with stat
+2024-11-06 12:41:14,344 - WARNING -  * Debugger is active!
+2024-11-06 12:41:14,353 - INFO -  * Debugger PIN: 843-860-041
+2024-11-06 12:41:31,437 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-06 12:41:31,437 - INFO - [33mPress CTRL+C to quit[0m
+2024-11-06 12:41:31,440 - INFO -  * Restarting with stat
+2024-11-06 12:41:31,897 - WARNING -  * Debugger is active!
+2024-11-06 12:41:31,906 - INFO -  * Debugger PIN: 843-860-041
+2024-11-06 12:42:56,780 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-06 12:42:56,780 - INFO - [33mPress CTRL+C to quit[0m
+2024-11-06 12:42:56,784 - INFO -  * Restarting with stat
+2024-11-06 12:42:57,387 - WARNING -  * Debugger is active!
+2024-11-06 12:42:57,400 - INFO -  * Debugger PIN: 843-860-041

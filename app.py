@@ -52,9 +52,9 @@ def dashboard_usuario():
     cursor = conexion.cursor()
     
     try:
-        # Consulta vulnerable a inyección SQL (para propósitos educativos)
-        query = f"SELECT nombre, apellido, cedula, correo, numero_celular, direccion FROM usuarios WHERE id = {usuario_id}"
-        cursor.execute(query)
+        cursor.execute('''
+            SELECT nombre, apellido, cedula, correo, numero_celular, direccion 
+            FROM usuarios WHERE id = ?''', (usuario_id,))
         usuario = cursor.fetchone()
         
         if usuario:
@@ -82,12 +82,8 @@ def dashboard_admin():
     cursor = conexion.cursor()
     
     try:
-        # Obtener todos los usuarios
         cursor.execute('SELECT id, nombre, apellido, cedula, correo, numero_celular, direccion, rol FROM usuarios')
         usuarios = cursor.fetchall()
-        
-        # Agregar print para debugging
-        print("Usuarios encontrados:", usuarios)
         
         return render_template('dashAdmin.html', nombre=session['nombre'], usuarios=usuarios)
     except sqlite3.Error as e:
@@ -138,7 +134,6 @@ def registro():
             ''', (nombre, apellido, cedula, correo, numero_celular, direccion, contrasena_cifrada, rol))
 
             conexion.commit()
-            conexion.close()
             return redirect(url_for('login'))
 
         except sqlite3.Error as e:
@@ -147,6 +142,155 @@ def registro():
             conexion.close()
 
     return render_template('registro.html')
+
+@app.route('/addUser', methods=['GET', 'POST'])
+def addUser():
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        apellido = request.form['apellido']
+        cedula = request.form['cedula']
+        correo = request.form['correo']
+        numero_celular = request.form['numero_celular']
+        direccion = request.form['direccion']
+        contrasena = request.form['contrasena']
+        contrasena_cifrada = cifrar_contrasena(contrasena)
+        rol = 'usuario'
+
+        # Validación básica de cédula
+        if not cedula.isdigit() or not (8 <= len(cedula) <= 10):
+            return "Error: La cédula debe ser un número entre 8 y 10 dígitos"
+
+        conexion = sqlite3.connect('usuarios.db')
+        cursor = conexion.cursor()
+        
+        try:
+            cursor.execute('''
+                INSERT INTO usuarios (nombre, apellido, cedula, correo, numero_celular, direccion, contrasena, rol)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (nombre, apellido, cedula, correo, numero_celular, direccion, contrasena_cifrada, rol))
+            
+            conexion.commit()
+            return redirect(url_for('dashboard_admin'))
+        except sqlite3.Error as e:
+            return f"Error en el registro: {str(e)}"
+        finally:
+            conexion.close()
+
+    return render_template('addUser.html')
+
+@app.route('/editar_usuario/<int:id>', methods=['GET', 'POST'])
+def editar_usuario(id):
+    if 'usuario_id' not in session or session['rol'] != 'admin':
+        return redirect(url_for('login'))
+        
+    conexion = sqlite3.connect('usuarios.db')
+    cursor = conexion.cursor()
+    
+    if request.method == 'GET':
+        try:
+            cursor.execute('SELECT * FROM usuarios WHERE id = ?', (id,))
+            usuario = cursor.fetchone()
+            if usuario:
+                return render_template('update.html', usuario=usuario)
+            return "Usuario no encontrado", 404
+        except sqlite3.Error as e:
+            return f"Error al obtener usuario: {str(e)}"
+        finally:
+            conexion.close()
+            
+    elif request.method == 'POST':
+        try:
+            nombre = request.form['nombre']
+            apellido = request.form['apellido']
+            cedula = request.form['cedula']
+            correo = request.form['correo']
+            numero_celular = request.form['numero_celular']
+            direccion = request.form['direccion']
+            rol = request.form['rol']
+            
+            cursor.execute('''
+                UPDATE usuarios 
+                SET nombre = ?, 
+                    apellido = ?, 
+                    cedula = ?, 
+                    correo = ?, 
+                    numero_celular = ?, 
+                    direccion = ?,
+                    rol = ?
+                WHERE id = ?
+            ''', (nombre, apellido, cedula, correo, numero_celular, direccion, rol, id))
+            
+            conexion.commit()
+            return redirect(url_for('dashboard_admin'))
+        except sqlite3.Error as e:
+            return f"Error al actualizar usuario: {str(e)}"
+        finally:
+            conexion.close()
+
+@app.route('/actualizar_perfil/<int:id>', methods=['GET', 'POST'])
+def actualizar_perfil(id):
+    if 'usuario_id' not in session:
+        return redirect(url_for('login'))
+        
+    conexion = sqlite3.connect('usuarios.db')
+    cursor = conexion.cursor()
+    
+    if request.method == 'GET':
+        try:
+            cursor.execute('SELECT * FROM usuarios WHERE id = ?', (session['usuario_id'],))
+            usuario = cursor.fetchone()
+            if usuario:
+                return render_template('update.html', usuario=usuario)
+            return "Usuario no encontrado", 404
+        except sqlite3.Error as e:
+            return f"Error al obtener usuario: {str(e)}"
+        finally:
+            conexion.close()
+            
+    elif request.method == 'POST':
+        try:
+            nombre = request.form['nombre']
+            apellido = request.form['apellido'] 
+            cedula = request.form['cedula']
+            correo = request.form['correo']
+            numero_celular = request.form['numero_celular']
+            direccion = request.form['direccion']
+            
+            cursor.execute('''
+                UPDATE usuarios 
+                SET nombre = ?, 
+                    apellido = ?, 
+                    cedula = ?, 
+                    correo = ?, 
+                    numero_celular = ?, 
+                    direccion = ?
+                WHERE id = ?
+            ''', (nombre, apellido, cedula, correo, numero_celular, direccion, session['usuario_id']))
+            
+            conexion.commit()
+            return redirect(url_for('dashboard_usuario'))
+        except sqlite3.Error as e:
+            return f"Error al actualizar perfil: {str(e)}"
+        finally:
+            conexion.close()
+
+
+@app.route('/eliminar_usuario/<int:id>')
+def eliminar_usuario(id):
+    if 'usuario_id' not in session or session['rol'] != 'admin':
+        return redirect(url_for('login'))
+        
+    conexion = sqlite3.connect('usuarios.db')
+    cursor = conexion.cursor()
+    
+    try:
+        cursor.execute('DELETE FROM usuarios WHERE id = ?', (id,))
+        conexion.commit()
+        return redirect(url_for('dashboard_admin'))
+    except sqlite3.Error as e:
+        return f"Error al eliminar usuario: {str(e)}"
+    finally:
+        conexion.close()
 
 if __name__ == '__main__':
     app.run(debug=True)
